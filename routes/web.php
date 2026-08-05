@@ -22,6 +22,18 @@ Route::middleware(['auth'])->group(function () {
     // CRUD Projects
     Route::resource('projects', ProjectController::class);
 
+    Route::get('/projects/archived', [ProjectController::class, 'archived'])
+        ->name('projects.archived');
+
+    Route::get('/projects/{project}/members/create', [ProjectController::class, 'createMember'])
+        ->name('projects.members.create');
+
+    Route::post('/projects/{project}/members', [ProjectController::class, 'addMember'])
+        ->name('projects.members.store');
+
+    Route::delete('/projects/{project}/members/{user}', [ProjectController::class, 'removeMember'])
+        ->name('projects.members.destroy');
+
     // Clôturer un projet
     Route::post('/projects/{project}/close', [ProjectController::class, 'close'])
         ->name('projects.close');
