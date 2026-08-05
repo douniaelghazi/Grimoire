@@ -12,34 +12,39 @@ class ProjectController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        //
-    }
+   public function index()
+{
+    $projects = Project::all();
 
+    return view('projects.index', compact('projects'));
+}
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
-        //
-    }
+  public function create()
+{
+    return view('projects.create');
+}
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreProjectRequest $request)
-    {
-        //
-    }
+   public function store(StoreProjectRequest $request)
+{
+    Project::create($request->validated());
+
+    return redirect()
+        ->route('projects.index')
+        ->with('success', 'Projet créé avec succès.');
+}
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
-    {
-        //
-    }
+   public function show(Project $project)
+{
+    return view('projects.show', compact('project'));
+}
 
     /**
      * Show the form for editing the specified resource.

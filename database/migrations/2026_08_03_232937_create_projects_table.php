@@ -14,8 +14,9 @@ return new class extends Migration
             $table->string('title');
             $table->text('description')->nullable();
 
-            $table->date('start_date')->nullable();
-            $table->date('end_date')->nullable();
+             $table->enum('status', ['encours', 'cloture'])->default('encours');
+               
+             $table->integer('avancement')->default(0);
 
             $table->softDeletes();
             $table->timestamps();
