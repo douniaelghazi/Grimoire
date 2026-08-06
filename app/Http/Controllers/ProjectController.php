@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ProjectClosed;
 use App\Http\Requests\AddProjectMemberRequest;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
@@ -189,6 +190,14 @@ class ProjectController extends Controller
      */
     public function close(Project $project)
     {
-        //
+        $this->authorize('update', $project);
+
+        $project->update(['status' => 'cloture']);
+
+        event(new ProjectClosed($project));
+
+        return redirect()
+            ->route('projects.index')
+            ->with('success', 'Projet clôturé avec succès.');
     }
 }
