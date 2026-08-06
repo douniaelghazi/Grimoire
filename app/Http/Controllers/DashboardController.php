@@ -23,10 +23,10 @@ class DashboardController extends Controller
         );
 
         $etudiantProjects = $projects->filter(
-            fn ($project) => $project->pivot->role === 'etudiantassistant'
+            fn ($project) => $project->pivot->role === 'etudiant_assistant'
         );
 
-        return view('dashboard.index', compact(
+        return view('dashboard', compact(
             'projects',
             'responsableProjects',
             'chercheurProjects',

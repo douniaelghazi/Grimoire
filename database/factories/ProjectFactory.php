@@ -14,8 +14,11 @@ class ProjectFactory extends Factory
         return [
             'title' => fake()->sentence(4),
             'description' => fake()->paragraph(),
-            'start_date' => fake()->date(),
-            'end_date' => fake()->date(),
+           'status' => fake()->randomElement([
+                'encours',
+                'cloture',
+            ]),
+            'avancement' => fake()->numberBetween(0, 100),
         ];
     }
 }

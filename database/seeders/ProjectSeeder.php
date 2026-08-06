@@ -2,17 +2,13 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
+use App\Models\Project;
 use Illuminate\Database\Seeder;
 
-class DatabaseSeeder extends Seeder
+class ProjectSeeder extends Seeder
 {
     public function run(): void
     {
-        User::factory(10)->create();
-
-        $this->call([
-            ProjectSeeder::class,
-        ]);
+        Project::factory(10)->create();
     }
 }
