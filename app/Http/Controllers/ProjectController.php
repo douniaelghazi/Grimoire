@@ -8,6 +8,9 @@ use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Models\Project;
 use App\Models\User;
+use App\Events\MemberAddedToProject;
+
+
 
 class ProjectController extends Controller
 {
@@ -141,18 +144,24 @@ class ProjectController extends Controller
         return view('projects.add-member', compact('project', 'availableUsers'));
     }
 
-    public function addMember(AddProjectMemberRequest $request, Project $project)
-    {
-        $this->authorize('addMember', $project);
+   public function addMember(AddProjectMemberRequest $request, Project $project)
+{
+    $this->authorize('addMember', $project);
 
-        $project->users()->syncWithoutDetaching([
-            $request->input('user_id') => ['role' => $request->input('role')],
-        ]);
+    $user = User::findOrFail($request->user_id);
 
-        return redirect()
-            ->route('projects.show', $project)
-            ->with('success', 'Membre ajouté avec succès.');
-    }
+    $project->users()->syncWithoutDetaching([
+        $user->id => [
+            'role' => $request->role,
+        ],
+    ]);
+
+    event(new MemberAddedToProject($project, $user));
+
+    return redirect()
+        ->route('projects.show', $project)
+        ->with('success', 'Membre ajouté avec succès.');
+}
 
     public function removeMember(Project $project, User $user)
     {
@@ -189,15 +198,17 @@ class ProjectController extends Controller
      * Close the project.
      */
     public function close(Project $project)
-    {
-        $this->authorize('update', $project);
+{
+    $this->authorize('update', $project);
 
-        $project->update(['status' => 'cloture']);
+    $project->update([
+        'status' => 'cloture'
+    ]);
 
-        event(new ProjectClosed($project));
+    event(new ProjectClosed($project));
 
-        return redirect()
-            ->route('projects.index')
-            ->with('success', 'Projet clôturé avec succès.');
-    }
+    return redirect()
+        ->route('projects.index')
+        ->with('success', 'Projet clôturé avec succès.');
+}
 }

@@ -14,8 +14,26 @@
                     <a href="{{ route('projects.members.create', $project) }}" class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700">Ajouter membre</a>
                 @endcan
                 @can('update', $project)
-                    <a href="{{ route('projects.edit', $project) }}" class="rounded-md bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200">Modifier</a>
-                @endcan
+    <a href="{{ route('projects.edit', $project) }}"
+       class="inline-flex items-center rounded-md bg-gray-600 px-4 py-2 text-sm font-medium text-white hover:bg-gray-700">
+        Modifier
+    </a>
+
+    @if($project->status === 'encours')
+        <form action="{{ route('projects.close', $project) }}" method="POST" class="inline">
+            @csrf
+            <button type="submit"
+                    class="inline-flex items-center rounded-md bg-yellow-500 px-4 py-2 text-sm font-medium text-white hover:bg-yellow-600"
+                    onclick="return confirm('Voulez-vous clôturer ce projet ?')">
+                Clôturer
+            </button>
+        </form>
+    @else
+        <span class="inline-flex items-center rounded-md bg-green-100 px-4 py-2 text-sm font-medium text-green-700">
+            Projet clôturé
+        </span>
+    @endif
+@endcan
                 @can('delete', $project)
                     <form action="{{ route('projects.destroy', $project) }}" method="POST" class="inline">
                         @csrf
